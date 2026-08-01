@@ -1,1 +1,12 @@
-[]
+
+[
+  {
+    "id": "83204e5c-24ef-4ddd-b23d-7d67943de9d3",
+    "title": "burger",
+    "amount": 422.5,
+    "category": "Food",
+    "date": "2026-01-15",
+    "createdAt": "2026-08-01T20:47:41.758Z"
+  }
+]
+
