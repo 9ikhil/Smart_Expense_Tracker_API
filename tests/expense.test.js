@@ -126,15 +126,19 @@ describe('POST /expenses', () => {
     expect(res.status).toBe(201);
   });
 
-  test('rejects a malformed JSON body', async () => {
-    const res = await request(app)
-      .post('/expenses')
-      .set('Content-Type', 'application/json')
-      .send('{ this is not valid json');
+ test('rejects a malformed JSON body', async () => {
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    expect(res.status).toBe(400);
-    expect(res.body.success).toBe(false);
-  });
+  const res = await request(app)
+    .post('/expenses')
+    .set('Content-Type', 'application/json')
+    .send('{ this is not valid json');
+
+  expect(res.status).toBe(400);
+  expect(res.body.success).toBe(false);
+
+  consoleErrorSpy.mockRestore();
+});
 });
 
 describe('GET /expenses', () => {
