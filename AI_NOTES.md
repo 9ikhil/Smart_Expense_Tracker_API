@@ -80,3 +80,27 @@ Some generated code introduced abstractions that were unnecessary for a small CR
 ## Overall Approach
 
 AI served as a productivity tool for generating boilerplate and providing implementation ideas. The final project reflects my review, validation, testing, and refinement to ensure it meets the assignment requirements and follows clean REST API practices.
+
+# -------***----------
+
+## Project Review
+
+After completing the implementation, I reviewed the project against the assignment requirements.
+
+### What went well
+
+- All required REST endpoints were implemented.
+- Input validation and error handling were reviewed for common edge cases.
+- The project follows a layered structure (routes, controllers, services) for maintainability.
+- File-based persistence was kept simple to match the assignment scope.
+- Tests were written for the core functionality.
+
+### Improvements I would make with more time
+
+- Add pagination and sorting for the expense listing endpoint.
+- Introduce file locking or migrate to SQLite for safer concurrent writes.
+- Increase automated test coverage for edge cases.
+- Add request logging and configuration management.
+- Improve CI by adding GitHub Actions to automatically run tests on every push.
+
+Overall, I focused on meeting the assignment requirements with clean, readable code rather than adding unnecessary complexity.
