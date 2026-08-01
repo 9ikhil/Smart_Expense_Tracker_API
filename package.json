@@ -1,0 +1,31 @@
+{
+  "name": "smart-expense-tracker",
+  "version": "1.0.0",
+  "description": "A REST API for tracking personal expenses with category filtering, totals, and summary reporting. JSON file storage, no database.",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "jest --coverage"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js",
+      "!src/docs/**"
+    ]
+  }
+}

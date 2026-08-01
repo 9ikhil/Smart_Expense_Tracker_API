@@ -1,0 +1,187 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Smart Expense Tracker API",
+    "version": "1.0.0",
+    "description": "A small REST API for tracking personal expenses. Data is persisted to a local JSON file - there is no database."
+  },
+  "servers": [
+    { "url": "http://localhost:3000", "description": "Local development server" }
+  ],
+  "tags": [
+    { "name": "Expenses", "description": "Create, list, filter, and delete expenses" },
+    { "name": "Summary", "description": "Aggregate totals" }
+  ],
+  "paths": {
+    "/expenses": {
+      "post": {
+        "tags": ["Expenses"],
+        "summary": "Add a new expense",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/NewExpense" },
+              "example": {
+                "title": "Groceries",
+                "amount": 42.5,
+                "category": "Food",
+                "date": "2026-01-15"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Expense created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ExpenseResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Expenses"],
+        "summary": "List all expenses, optionally filtered by category",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string" },
+            "description": "Case-insensitive category filter, e.g. Food",
+            "example": "Food"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of expenses",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ExpenseListResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/summary": {
+      "get": {
+        "tags": ["Summary"],
+        "summary": "Get overall total and per-category totals",
+        "responses": {
+          "200": {
+            "description": "Summary of all expenses",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SummaryResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expenses/{id}": {
+      "delete": {
+        "tags": ["Expenses"],
+        "summary": "Delete an expense by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Expense deleted, no content returned" },
+          "404": {
+            "description": "Expense not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NewExpense": {
+        "type": "object",
+        "required": ["title", "amount", "category", "date"],
+        "properties": {
+          "title": { "type": "string", "example": "Groceries" },
+          "amount": { "type": "number", "minimum": 0, "exclusiveMinimum": true, "example": 42.5 },
+          "category": { "type": "string", "example": "Food" },
+          "date": { "type": "string", "format": "date", "example": "2026-01-15" }
+        }
+      },
+      "Expense": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "title": { "type": "string" },
+          "amount": { "type": "number" },
+          "category": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ExpenseResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": { "$ref": "#/components/schemas/Expense" }
+        }
+      },
+      "ExpenseListResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Expense" }
+          }
+        }
+      },
+      "SummaryResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "number", "example": 142.75 },
+              "byCategory": {
+                "type": "object",
+                "additionalProperties": { "type": "number" },
+                "example": { "Food": 82.5, "Transport": 60.25 }
+              },
+              "count": { "type": "integer", "example": 5 }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "message": { "type": "string", "example": "Expense not found" }
+        }
+      }
+    }
+  }
+}
